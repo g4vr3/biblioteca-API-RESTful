@@ -5,6 +5,7 @@ import g4vr3.bibliotecaapi.repository.EjemplarRepository;
 import g4vr3.bibliotecaapi.repository.LibroRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/ejemplares")
+@CacheConfig(cacheNames = {"ejemplares"})
 public class EjemplarController {
 
     private final EjemplarRepository ejemplarRepository;

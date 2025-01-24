@@ -1,22 +1,15 @@
 package g4vr3.bibliotecaapi.controller;
 
-import g4vr3.bibliotecaapi.model.Ejemplar;
-import g4vr3.bibliotecaapi.model.Libro;
 import g4vr3.bibliotecaapi.model.Prestamo;
-import g4vr3.bibliotecaapi.model.Usuario;
-import g4vr3.bibliotecaapi.repository.EjemplarRepository;
 import g4vr3.bibliotecaapi.repository.PrestamoRepository;
-import g4vr3.bibliotecaapi.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,16 +19,10 @@ import java.util.Objects;
 public class PrestamoController {
 
     private final PrestamoRepository prestamoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final EjemplarRepository ejemplarRepository;
 
     @Autowired
-    public PrestamoController(PrestamoRepository prestamoRepository,
-                              UsuarioRepository usuarioRepository,
-                              EjemplarRepository ejemplarRepository) {
+    public PrestamoController(PrestamoRepository prestamoRepository) {
         this.prestamoRepository = prestamoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.ejemplarRepository = ejemplarRepository;
     }
     //GET --> SELECT *
     @GetMapping
@@ -66,6 +53,8 @@ public class PrestamoController {
     //POST --> INSERT
     @PostMapping
     public ResponseEntity<?> postPrestamo(@Valid @RequestBody Prestamo prestamoToPost){
+        //TODO: Gestionar intentos de post para usuarios o ejemplares que no existen y otras validaciones
+
         // Si el préstamo a crear ya existe, 409 CONFLICT
         if (prestamoRepository.existsById(prestamoToPost.getId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

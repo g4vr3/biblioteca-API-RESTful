@@ -1,22 +1,21 @@
 package g4vr3.bibliotecaapi.controller;
 
-import g4vr3.bibliotecaapi.model.Prestamo;
 import g4vr3.bibliotecaapi.model.Usuario;
 import g4vr3.bibliotecaapi.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
 @RequestMapping("/usuarios")
+@CacheConfig(cacheNames = {"usuarios"})
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
@@ -50,6 +49,8 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<?> postUsuario(@Valid @RequestBody Usuario usuarioToPost){
+        // TODO: Validaciones
+
         // Si el usuario a crear ya existe, 409 CONFLICT
         if (usuarioRepository.existsById(usuarioToPost.getId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

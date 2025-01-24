@@ -2,9 +2,9 @@ package g4vr3.bibliotecaapi.controller;
 
 import g4vr3.bibliotecaapi.model.Libro;
 import g4vr3.bibliotecaapi.repository.LibroRepository;
-import g4vr3.bibliotecaapi.repository.PrestamoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +15,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/libros")
+@CacheConfig(cacheNames = {"libros"})
 public class LibroController {
 
     private final LibroRepository libroRepository;
