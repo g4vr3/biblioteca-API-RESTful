@@ -51,8 +51,6 @@ public class EjemplarController {
 
     @PostMapping
     public ResponseEntity<?> postEjemplar(@Valid @RequestBody Ejemplar ejemplarToPost) {
-
-        // TODO: ¿Realmente hace falta verificar esto?
         // Verificar si el libro asociado al ejemplar existe
         if (!this.libroRepository.existsById(ejemplarToPost.getLibro().getIsbn())) {
             // Si el libro no existe, 404 NOT FOUND
@@ -64,30 +62,6 @@ public class EjemplarController {
         Ejemplar postedEjemplar = this.ejemplarRepository.save(ejemplarToPost);
         return ResponseEntity.status(HttpStatus.CREATED).body(postedEjemplar); // 201 CREATED
     }
-
-
-//    @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<?> postEjemplarForm(@RequestParam String isbn,
-//                                              @RequestParam String estado) {
-//        // Buscar el Libro por ISBN
-//        Libro libro = this.libroRepository.findById(isbn).orElse(null);
-//
-//        // Si el Libro no existe, 404 NOT FOUND
-//        if (libro == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                    .body("Error: El libro con el ISBN " + isbn + " no existe.");
-//        }
-//
-//        // Crear el Ejemplar
-//        Ejemplar ejemplarToPost = new Ejemplar();
-//        ejemplarToPost.setEstado(estado);
-//        ejemplarToPost.setLibro(libro);  // Asigna el Libro al Ejemplar
-//
-//        // Persistir el Ejemplar con el Libro asignado
-//        Ejemplar postedEjemplar = this.ejemplarRepository.save(ejemplarToPost);
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(postedEjemplar); // 201 CREATED
-//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateEjemplar(@PathVariable int id, @RequestBody Ejemplar ejemplarToUpdate) {

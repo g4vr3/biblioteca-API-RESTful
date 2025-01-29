@@ -60,26 +60,6 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postedUsuario); // 201 CREATED
     }
 
-//    @PostMapping(value ="/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Usuario> postUsuarioForm(@RequestParam int id,
-//                                                  @RequestParam String nombre,
-//                                                  @RequestParam String dni,
-//                                                  @RequestParam String email,
-//                                                  @RequestParam String password,
-//                                                  @RequestParam String tipo,
-//                                                  @RequestParam LocalDate penalizacionHasta){
-//        Usuario usuarioToPost = new Usuario();
-//        usuarioToPost.setId(id);
-//        usuarioToPost.setDni(dni);
-//        usuarioToPost.setNombre(nombre);
-//        usuarioToPost.setEmail(email);
-//        usuarioToPost.setPassword(password);
-//        usuarioToPost.setTipo(tipo);
-//        usuarioToPost.setPenalizacionHasta(penalizacionHasta);
-//        this.usuarioRepository.save(usuarioToPost);
-//        return ResponseEntity.created(null).body(usuarioToPost);
-//    }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUsuario(@RequestBody Usuario usuarioToUpdate, @PathVariable int id){
         // Si no existe el usuario a actualizar, 404 NOT FOUND
@@ -109,5 +89,4 @@ public class UsuarioController {
         usuarioRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Eliminado correctamente"); // 204 NO CONTENT
     }
-
 }

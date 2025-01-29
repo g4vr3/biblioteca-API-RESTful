@@ -38,11 +38,6 @@ public class LibroController {
     @GetMapping("/{isbn}")
     @Cacheable
     public ResponseEntity<?> getLibro(@PathVariable String isbn) {
-        // TODO: ¿Cuál es mejor?
-//        return libroRepository.findById(isbn)
-//                .map(ResponseEntity::ok) // 200 OK + Libro
-//                .orElse(ResponseEntity.notFound().build()); // 404 NOT FOUND
-
         Libro libro = libroRepository.findById(isbn).orElse(null);
 
         if (libro != null) {
@@ -68,7 +63,7 @@ public class LibroController {
     // PUT --> Actualizar un libro existente
     @PutMapping("/{isbn}")
     public ResponseEntity<?> updateLibro(@PathVariable String isbn, @Valid @RequestBody Libro libroToUpdate) {
-        // Si no existe el libro a actualizar, 404 NOT FOUND
+        // Si no existe el libro a actualizar lanzará 404 NOT FOUND
         if (!libroRepository.existsById(isbn)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: No se encontró un libro con el ISBN " + isbn);
@@ -87,7 +82,7 @@ public class LibroController {
     // DELETE --> Eliminar un libro por su ISBN
     @DeleteMapping("/{isbn}")
     public ResponseEntity<?> deleteLibro(@PathVariable String isbn) {
-        // Si el libro a eliminar no existe, 404 NOT FOUND
+        // Si el libro a eliminar no existe lanzará 404 NOT FOUND
         if (!libroRepository.existsById(isbn)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: No se encontró un libro con el ISBN " + isbn);

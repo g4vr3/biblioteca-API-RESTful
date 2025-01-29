@@ -1,7 +1,9 @@
 package g4vr3.bibliotecaapi.controller;
 
 import g4vr3.bibliotecaapi.model.Prestamo;
+import g4vr3.bibliotecaapi.repository.EjemplarRepository;
 import g4vr3.bibliotecaapi.repository.PrestamoRepository;
+import g4vr3.bibliotecaapi.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -19,10 +21,14 @@ import java.util.Objects;
 public class PrestamoController {
 
     private final PrestamoRepository prestamoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final EjemplarRepository ejemplarRepository;
 
     @Autowired
-    public PrestamoController(PrestamoRepository prestamoRepository) {
+    public PrestamoController(PrestamoRepository prestamoRepository, UsuarioRepository usuarioRepository, EjemplarRepository ejemplarRepository) {
         this.prestamoRepository = prestamoRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.ejemplarRepository = ejemplarRepository;
     }
     //GET --> SELECT *
     @GetMapping
@@ -43,7 +49,7 @@ public class PrestamoController {
         Prestamo prestamo = prestamoRepository.findById(id).orElse(null);
 
         if (prestamo != null) {
-            return ResponseEntity.ok(prestamo); // 200 OK + prestamo
+            return ResponseEntity.ok(prestamo); // 200 OK + préstamo
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: No se encontró un préstamo con el ID " + id); // 404 NOT FOUND
@@ -53,7 +59,17 @@ public class PrestamoController {
     //POST --> INSERT
     @PostMapping
     public ResponseEntity<?> postPrestamo(@Valid @RequestBody Prestamo prestamoToPost){
-        //TODO: Gestionar intentos de post para usuarios o ejemplares que no existen y otras validaciones
+        // Si no existe el usuario asociado al préstamo, 404 NOT FOUND
+        if (!usuarioRepository.existsById(prestamoToPost.getUsuario().getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: No se encontró un usuario con el ID " + prestamoToPost.getUsuario().getId());
+        }
+
+        // Si no existe el ejemplar asociado al préstamo, 404 NOT FOUND
+        if (!ejemplarRepository.existsById(prestamoToPost.getEjemplar().getId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Error: No se encontró un ejemplar con el ID " + prestamoToPost.getEjemplar().getId());
+        }
 
         // Si el préstamo a crear ya existe, 409 CONFLICT
         if (prestamoRepository.existsById(prestamoToPost.getId())) {
@@ -64,23 +80,7 @@ public class PrestamoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postedPrestamo); // 201 CREATED
     }
 
-    //POST con Form normal, se trabajará con JSONs normalmente...
-//    @PostMapping(value = "/form", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<Prestamo> postPrestamoForm(@RequestParam int id, @RequestParam int idEjemplar, @RequestParam int idUsuario,
-//                                                     @RequestParam LocalDate fechaInicio, @RequestParam LocalDate fechaFin){
-//        Prestamo prestamoToPost = new Prestamo();
-//        prestamoToPost.setId(id);
-//        // Obtener Usuario y Ejemplar a partir de los ID recibidos
-//        Usuario usuario = this.usuarioRepository.findById(idUsuario).orElse(null); // Busca el Usuario por ID
-//        Ejemplar ejemplar = this.ejemplarRepository.findById(idEjemplar).orElse(null); // Busca el Ejemplar por ID
-//        prestamoToPost.setFechaInicio(fechaInicio);
-//        prestamoToPost.setFechaDevolucion(fechaFin);
-//        this.prestamoRepository.save(prestamoToPost);
-//        return ResponseEntity.created(null).body(prestamoToPost);
-//    }
-
     //PUT --> UPDATE
-    //falta actualizar ficheros
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePrestamo(@RequestBody Prestamo prestamoToUpdate, @PathVariable int id){
         // Si no existe el préstamo a actualizar, 404 NOT FOUND
