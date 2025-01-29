@@ -2,6 +2,7 @@ package g4vr3.bibliotecaapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Prestamo {
     private Integer id;
 
     @NotNull
+    @NotEmpty
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -27,6 +29,7 @@ public class Prestamo {
     private Usuario usuario;
 
     @NotNull
+    @NotEmpty
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ejemplar_id", nullable = false)
@@ -34,9 +37,11 @@ public class Prestamo {
     private Ejemplar ejemplar;
 
     @NotNull
+    @NotEmpty
     @Column(name = "fechaInicio", nullable = false)
     private LocalDate fechaInicio;
 
+    @NotEmpty
     @Column(name = "fechaDevolucion")
     private LocalDate fechaDevolucion;
 }

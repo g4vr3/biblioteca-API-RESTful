@@ -2,7 +2,9 @@ package g4vr3.bibliotecaapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -28,6 +30,9 @@ public class Ejemplar {
     @JsonIncludeProperties({"isbn"})
     private Libro libro;
 
+    @NotEmpty
+    @NotNull
+    @Pattern(regexp = "disponible|prestado|dañado", message = "El estado debe ser 'disponible', 'prestado' o 'dañado'")
     @ColumnDefault("'Disponible'")
     @Column(name = "estado")
     private String estado;
