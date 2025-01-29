@@ -3,11 +3,15 @@ package g4vr3.bibliotecaapi.model;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
+@Setter
+@Getter
 @Entity
 public class Prestamo {
     @Id
@@ -20,7 +24,7 @@ public class Prestamo {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "usuario_id", nullable = false)
     @JsonIncludeProperties({"id"})
-    private g4vr3.bibliotecaapi.model.Usuario usuario;
+    private Usuario usuario;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -35,44 +39,4 @@ public class Prestamo {
 
     @Column(name = "fechaDevolucion")
     private LocalDate fechaDevolucion;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario.getNombre();
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public int getEjemplar() {
-        return ejemplar.getId();
-    }
-
-    public void setEjemplar(Ejemplar ejemplar) {
-        this.ejemplar = ejemplar;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public LocalDate getFechaDevolucion() {
-        return fechaDevolucion;
-    }
-
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
-    }
 }
